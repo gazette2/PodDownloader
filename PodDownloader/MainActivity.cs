@@ -1,7 +1,9 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.OS;
+using Android.Widget;
 using System;
+using System.Threading.Tasks;
 
 namespace PodDownloader
 {
@@ -14,10 +16,21 @@ namespace PodDownloader
 
 			// Set our view from the "main" layout resource
 			SetContentView(Resource.Layout.Main);
+			var button = FindViewById<Button>(Resource.Id.downloadButton);
+			button.Click += async (object sender, EventArgs e) =>
+			{
+				await Task.Run(() =>
+				{
+					BatchDownloader.DownloadJungsNewsShow();
+					BatchDownloader.DownloadKimsNewsFactory();
+					BatchDownloader.DownloadKimsNewsShow();
+				});
+			};
 		}
 
 		private void SetAlarms()
 		{
+			/*
 			AlarmManager alarm = (AlarmManager)GetSystemService(Context.AlarmService);
 
 			var futureDate = DateTime.Now.Date + new TimeSpan(10, 0, 0);
@@ -28,6 +41,7 @@ namespace PodDownloader
 
 			PendingIntent sender = PendingIntent.GetBroadcast(this, 0, intent, PendingIntentFlags.UpdateCurrent);
 			alarm.Set(AlarmType.RtcWakeup, futureDate.Millisecond, sender);
+			*/
 		}
 	}
 }

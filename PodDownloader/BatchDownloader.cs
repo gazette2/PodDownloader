@@ -13,13 +13,13 @@ using Android.Widget;
 
 namespace PodDownloader
 {
-	public class BatchDownloader : BroadcastReceiver
+	public static class BatchDownloader
 	{
-		private string year = DateTime.Now.Year.ToString();
-		private string month = DateTime.Now.Month.ToString("D2");
-		private string day = DateTime.Now.Day.ToString("D2");
+		private static string year = DateTime.Now.Year.ToString();
+		private static string month = DateTime.Now.Month.ToString("D2");
+		private static string day = DateTime.Now.Day.ToString("D2");
 
-		public void DownloadKimsNewsFactory()
+		public static void DownloadKimsNewsFactory()
 		{
 			using (WebClient client = new WebClient())
 			{
@@ -34,7 +34,7 @@ namespace PodDownloader
 			}
 		}
 
-		public void DownloadJungsNewsShow()
+		public static void DownloadJungsNewsShow()
 		{
 			using (WebClient client = new WebClient())
 			{
@@ -54,7 +54,7 @@ namespace PodDownloader
 			}
 		}
 
-		public void DownloadKimsNewsShow()
+		public static void DownloadKimsNewsShow()
 		{
 			using (WebClient client = new WebClient())
 			{
@@ -67,11 +67,6 @@ namespace PodDownloader
 					client.DownloadFile(podAddress, fileName);
 				}
 			}
-		}
-
-		public override void OnReceive(Context context, Intent intent)
-		{
-			throw new NotImplementedException();
 		}
 	}
 }
