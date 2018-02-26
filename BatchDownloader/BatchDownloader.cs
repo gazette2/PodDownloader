@@ -1,15 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 
 namespace PodDownloader
 {
@@ -19,8 +11,9 @@ namespace PodDownloader
 		private static string month = DateTime.Now.Month.ToString("D2");
 		private static string day = DateTime.Now.Day.ToString("D2");
 
-		public static void DownloadKimsNewsFactory()
+		public static List<string> DownloadKimsNewsFactory()
 		{
+			List<string> failedFileList = new List<string>();
 			using (WebClient client = new WebClient())
 			{
 				string podBase = "http://cdn.podbbang.com/data1/tbsadm/";
@@ -29,13 +22,22 @@ namespace PodDownloader
 					string fileName = $"nf{year.Substring(2)}{month}{day}00{i}.mp3";
 					string podAddress = podBase + fileName;
 
-					client.DownloadFile(podAddress, fileName);
+					try
+					{
+						client.DownloadFile(podAddress, fileName);
+					}
+					catch (WebException)
+					{
+						failedFileList.Add(podAddress);
+					}
 				}
 			}
+			return failedFileList;
 		}
 
-		public static void DownloadJungsNewsShow()
+		public static List<string> DownloadJungsNewsShow()
 		{
+			List<string> failedFileList = new List<string>();
 			using (WebClient client = new WebClient())
 			{
 				StringBuilder podBase = new StringBuilder("http://podcastfile2.sbs.co.kr/powerfm/");
@@ -49,13 +51,22 @@ namespace PodDownloader
 					string fileName = $"love-v2000010280-{year}{month}{day}(10-0{i}).mp3";
 					string podAddress = podBase + fileName;
 
-					client.DownloadFile(podAddress, fileName);
+					try
+					{
+						client.DownloadFile(podAddress, fileName);
+					}
+					catch (WebException)
+					{
+						failedFileList.Add(podAddress);
+					}
 				}
 			}
+			return failedFileList;
 		}
 
-		public static void DownloadKimsNewsShow()
+		public static List<string> DownloadKimsNewsShow()
 		{
+			List<string> failedFileList = new List<string>();
 			using (WebClient client = new WebClient())
 			{
 				string podBase = "http://podcast.cbs-vod.gscdn.com/cbsv/cbsaod/newshow/";
@@ -64,9 +75,17 @@ namespace PodDownloader
 					string fileName = $"{year}{month}{day}newsshow{i}.mp3";
 					string podAddress = podBase + fileName;
 
-					client.DownloadFile(podAddress, fileName);
+					try
+					{
+						client.DownloadFile(podAddress, fileName);
+					}
+					catch (WebException)
+					{
+						failedFileList.Add(podAddress);
+					}
 				}
 			}
+			return failedFileList;
 		}
 	}
 }

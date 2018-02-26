@@ -1,8 +1,11 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.OS;
+using Android.Util;
 using Android.Widget;
 using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PodDownloader
@@ -21,9 +24,14 @@ namespace PodDownloader
 			{
 				await Task.Run(() =>
 				{
-					BatchDownloader.DownloadJungsNewsShow();
-					BatchDownloader.DownloadKimsNewsFactory();
-					BatchDownloader.DownloadKimsNewsShow();
+					List<string> failedList = new List<string>();
+					failedList.AddRange(BatchDownloader.DownloadJungsNewsShow());
+					failedList.AddRange(BatchDownloader.DownloadKimsNewsFactory());
+					failedList.AddRange(BatchDownloader.DownloadKimsNewsShow());
+					failedList
+						.Select(msg => "failed url: " + msg)
+						.ToList()
+						.ForEach(msg => Log.Info(typeof(MainActivity).ToString(), msg));
 				});
 			};
 		}
