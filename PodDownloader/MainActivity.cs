@@ -24,16 +24,29 @@ namespace PodDownloader
 			{
 				await Task.Run(() =>
 				{
+					var savePath = GetSavePath();
+
 					List<string> failedList = new List<string>();
-					failedList.AddRange(BatchDownloader.DownloadJungsNewsShow());
-					failedList.AddRange(BatchDownloader.DownloadKimsNewsFactory());
-					failedList.AddRange(BatchDownloader.DownloadKimsNewsShow());
+					failedList.AddRange(BatchDownloader.DownloadJungsNewsShow(savePath));
+					failedList.AddRange(BatchDownloader.DownloadKimsNewsFactory(savePath));
+					failedList.AddRange(BatchDownloader.DownloadKimsNewsShow(savePath));
 					failedList
 						.Select(msg => "failed url: " + msg)
 						.ToList()
 						.ForEach(msg => Log.Info(typeof(MainActivity).ToString(), msg));
 				});
 			};
+		}
+
+		private string GetSavePath(bool useInternal = false)
+		{
+			if (useInternal)
+				return FilesDir.AbsolutePath + '/';
+			else
+			{
+				return Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + '/'
+					+ Android.OS.Environment.DirectoryDownloads + '/';
+			}
 		}
 
 		private void SetAlarms()

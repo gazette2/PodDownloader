@@ -11,7 +11,7 @@ namespace PodDownloader
 		private static string month = DateTime.Now.Month.ToString("D2");
 		private static string day = DateTime.Now.Day.ToString("D2");
 
-		public static List<string> DownloadKimsNewsFactory()
+		public static List<string> DownloadKimsNewsFactory(string savePath)
 		{
 			List<string> failedFileList = new List<string>();
 			using (WebClient client = new WebClient())
@@ -24,7 +24,8 @@ namespace PodDownloader
 
 					try
 					{
-						client.DownloadFile(podAddress, fileName);
+						var path = savePath + fileName;
+						client.DownloadFile(podAddress, path);
 					}
 					catch (WebException)
 					{
@@ -35,7 +36,7 @@ namespace PodDownloader
 			return failedFileList;
 		}
 
-		public static List<string> DownloadJungsNewsShow()
+		public static List<string> DownloadJungsNewsShow(string savePath)
 		{
 			List<string> failedFileList = new List<string>();
 			using (WebClient client = new WebClient())
@@ -53,7 +54,8 @@ namespace PodDownloader
 
 					try
 					{
-						client.DownloadFile(podAddress, fileName);
+						var path = savePath + fileName;
+						client.DownloadFile(podAddress, path);
 					}
 					catch (WebException)
 					{
@@ -64,7 +66,7 @@ namespace PodDownloader
 			return failedFileList;
 		}
 
-		public static List<string> DownloadKimsNewsShow()
+		public static List<string> DownloadKimsNewsShow(string savePath)
 		{
 			List<string> failedFileList = new List<string>();
 			using (WebClient client = new WebClient())
@@ -77,7 +79,8 @@ namespace PodDownloader
 
 					try
 					{
-						client.DownloadFile(podAddress, fileName);
+						var path = savePath + fileName;
+						client.DownloadFile(podAddress, path);
 					}
 					catch (WebException)
 					{
