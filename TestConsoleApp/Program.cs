@@ -7,7 +7,9 @@ namespace TestConsoleApp
     {
         static void Main(string[] args)
         {
+			BatchDownloader.DownloadJungsNewsShow();
+			BatchDownloader.DownloadKimsNewsFactory();
 			BatchDownloader.DownloadKimsNewsShow();
-        }
-    }
+		}
+	}
 }
