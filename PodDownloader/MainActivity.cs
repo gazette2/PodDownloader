@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Android.Net;
 
 namespace PodDownloader
 {
@@ -22,7 +23,25 @@ namespace PodDownloader
 			var button = FindViewById<Button>(Resource.Id.downloadButton);
 			button.Click += async (object sender, EventArgs e) =>
 			{
-				await Task.Run(() =>
+				var cm = GetSystemService(ConnectivityService) as ConnectivityManager;
+				if (cm?.ActiveNetworkInfo.Type != ConnectivityType.Wifi)
+				{
+					var builder = new AlertDialog.Builder(this);
+					builder.SetMessage("Connect without wifi?");
+					builder.SetNegativeButton("Cancel", (obj, x) => { });
+					builder.SetPositiveButton("Ok", async (obj, which) =>
+					{
+						await StartBatchDownload();
+					});
+					builder.Show();
+				}
+				else
+					await StartBatchDownload();
+			};
+
+			Task StartBatchDownload()
+			{
+				return Task.Run(() =>
 				{
 					var savePath = GetSavePath();
 
@@ -35,7 +54,7 @@ namespace PodDownloader
 						.ToList()
 						.ForEach(msg => Log.Info(typeof(MainActivity).ToString(), msg));
 				});
-			};
+			}
 		}
 
 		private string GetSavePath(bool useInternal = false)
