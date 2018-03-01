@@ -11,6 +11,20 @@ namespace PodDownloader
 		private static string month = DateTime.Now.Month.ToString("D2");
 		private static string day = DateTime.Now.Day.ToString("D2");
 
+		public static DateTime Date
+		{
+			get
+			{
+				return new DateTime(int.Parse(year), int.Parse(month), int.Parse(day));
+			}
+			set
+			{
+				year = value.Year.ToString();
+				month = value.Month.ToString("D2");
+				day = value.Day.ToString("D2");
+			}
+		}
+
 		public static List<string> DownloadKimsNewsFactory(string savePath)
 		{
 			List<string> failedFileList = new List<string>();

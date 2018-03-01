@@ -8,6 +8,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Android.Net;
+using System.IO;
 
 namespace PodDownloader
 {
@@ -20,6 +21,8 @@ namespace PodDownloader
 
 			// Set our view from the "main" layout resource
 			SetContentView(Resource.Layout.Main);
+			var datePicker = FindViewById<DatePicker>(Resource.Id.downloadDatePicker);
+			var messageList = FindViewById<ListView>(Resource.Id.msgList);
 			var button = FindViewById<Button>(Resource.Id.downloadButton);
 			button.Click += async (object sender, EventArgs e) =>
 			{
@@ -45,6 +48,7 @@ namespace PodDownloader
 				{
 					var savePath = GetSavePath();
 
+					BatchDownloader.Date = datePicker.DateTime;
 					List<string> failedList = new List<string>();
 					failedList.AddRange(BatchDownloader.DownloadJungsNewsShow(savePath));
 					failedList.AddRange(BatchDownloader.DownloadKimsNewsFactory(savePath));
@@ -53,18 +57,32 @@ namespace PodDownloader
 						.Select(msg => "failed url: " + msg)
 						.ToList()
 						.ForEach(msg => Log.Info(typeof(MainActivity).ToString(), msg));
+
+					RunOnUiThread(() =>
+					{
+						Toast.MakeText(this, "Download complete", ToastLength.Long).Show();
+					});
 				});
 			}
 		}
 
 		private string GetSavePath(bool useInternal = false)
 		{
+			string internalPath = FilesDir.AbsolutePath + '/';
 			if (useInternal)
-				return FilesDir.AbsolutePath + '/';
+				return internalPath;
 			else
 			{
-				return Android.OS.Environment.ExternalStorageDirectory.AbsolutePath + '/'
-					+ Android.OS.Environment.DirectoryDownloads + '/';
+				if (Android.OS.Environment.ExternalStorageState == Android.OS.Environment.MediaMounted)
+				{
+					var downloadFolderPath = Android.OS.Environment.GetExternalStoragePublicDirectory(
+						Android.OS.Environment.DirectoryDownloads).AbsolutePath + '/' + "PodDownload";
+					if (!Directory.Exists(downloadFolderPath))
+						Directory.CreateDirectory(downloadFolderPath);
+					return downloadFolderPath + "/";
+				}
+				else
+					return internalPath;
 			}
 		}
 
