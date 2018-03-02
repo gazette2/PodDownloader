@@ -15,14 +15,20 @@ namespace PodDownloader
 	[Activity(Label = "PodDownloader", MainLauncher = true)]
 	public class MainActivity : Activity
 	{
+		private List<string> messages = new List<string>();
+		private ArrayAdapter adapter;
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
 			base.OnCreate(savedInstanceState);
 
 			// Set our view from the "main" layout resource
 			SetContentView(Resource.Layout.Main);
-			var datePicker = FindViewById<DatePicker>(Resource.Id.downloadDatePicker);
+
 			var messageList = FindViewById<ListView>(Resource.Id.msgList);
+			adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItem1, messages);
+			messageList.Adapter = adapter;
+
+			var datePicker = FindViewById<DatePicker>(Resource.Id.downloadDatePicker);
 			var button = FindViewById<Button>(Resource.Id.downloadButton);
 			button.Click += async (object sender, EventArgs e) =>
 			{
@@ -53,13 +59,18 @@ namespace PodDownloader
 					failedList.AddRange(BatchDownloader.DownloadJungsNewsShow(savePath));
 					failedList.AddRange(BatchDownloader.DownloadKimsNewsFactory(savePath));
 					failedList.AddRange(BatchDownloader.DownloadKimsNewsShow(savePath));
-					failedList
-						.Select(msg => "failed url: " + msg)
-						.ToList()
-						.ForEach(msg => Log.Info(typeof(MainActivity).ToString(), msg));
 
 					RunOnUiThread(() =>
 					{
+						failedList
+							.Select(msg => "failed url: " + msg)
+							.ToList()
+							.ForEach(msg =>
+							{
+								Log.Info(typeof(MainActivity).ToString(), msg);
+								adapter.Add(msg);
+							});
+						adapter.NotifyDataSetChanged();
 						Toast.MakeText(this, "Download complete", ToastLength.Long).Show();
 					});
 				});
