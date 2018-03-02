@@ -15,7 +15,6 @@ namespace PodDownloader
 	[Activity(Label = "PodDownloader", MainLauncher = true)]
 	public class MainActivity : Activity
 	{
-		private List<string> messages = new List<string>();
 		private ArrayAdapter adapter;
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
@@ -25,8 +24,10 @@ namespace PodDownloader
 			SetContentView(Resource.Layout.Main);
 
 			var messageList = FindViewById<ListView>(Resource.Id.msgList);
-			adapter = new ArrayAdapter(this, Android.Resource.Layout.SimpleListItem1, messages);
+			adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1);
 			messageList.Adapter = adapter;
+			var progressBar = FindViewById<ProgressBar>(Resource.Id.downloadProgressBar);
+			progressBar.Max = 100;
 
 			var datePicker = FindViewById<DatePicker>(Resource.Id.downloadDatePicker);
 			var button = FindViewById<Button>(Resource.Id.downloadButton);
