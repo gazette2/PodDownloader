@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using PodDownloader;
 
 namespace TestConsoleApp
@@ -7,9 +8,14 @@ namespace TestConsoleApp
     {
         static void Main(string[] args)
         {
-			BatchDownloader.DownloadJungsNewsShow("./");
-			BatchDownloader.DownloadKimsNewsFactory("./");
-			BatchDownloader.DownloadKimsNewsShow("./");
+			BatchDownloader.DownloadJungsNewsShow("./", DownloadProgressHandler);
+			BatchDownloader.DownloadKimsNewsFactory("./", DownloadProgressHandler);
+			BatchDownloader.DownloadKimsNewsShow("./", DownloadProgressHandler);
+		}
+
+		static void DownloadProgressHandler(object obj, DownloadProgressChangedEventArgs arg)
+		{
+			Console.WriteLine(arg.ProgressPercentage);
 		}
 	}
 }

@@ -25,7 +25,7 @@ namespace PodDownloader
 			}
 		}
 
-		public static List<string> DownloadKimsNewsFactory(string savePath)
+		public static List<string> DownloadKimsNewsFactory(string savePath, DownloadProgressChangedEventHandler eventHandler)
 		{
 			List<string> failedFileList = new List<string>();
 			using (WebClient client = new WebClient())
@@ -39,7 +39,8 @@ namespace PodDownloader
 					try
 					{
 						var path = savePath + fileName;
-						client.DownloadFile(podAddress, path);
+						client.DownloadProgressChanged += eventHandler;
+						client.DownloadFileTaskAsync(podAddress, path).Wait();
 					}
 					catch (WebException)
 					{
@@ -50,7 +51,7 @@ namespace PodDownloader
 			return failedFileList;
 		}
 
-		public static List<string> DownloadJungsNewsShow(string savePath)
+		public static List<string> DownloadJungsNewsShow(string savePath, DownloadProgressChangedEventHandler eventHandler)
 		{
 			List<string> failedFileList = new List<string>();
 			using (WebClient client = new WebClient())
@@ -69,7 +70,8 @@ namespace PodDownloader
 					try
 					{
 						var path = savePath + fileName;
-						client.DownloadFile(podAddress, path);
+						client.DownloadProgressChanged += eventHandler;
+						client.DownloadFileTaskAsync(podAddress, path).Wait();
 					}
 					catch (WebException)
 					{
@@ -80,7 +82,7 @@ namespace PodDownloader
 			return failedFileList;
 		}
 
-		public static List<string> DownloadKimsNewsShow(string savePath)
+		public static List<string> DownloadKimsNewsShow(string savePath, DownloadProgressChangedEventHandler eventHandler)
 		{
 			List<string> failedFileList = new List<string>();
 			using (WebClient client = new WebClient())
@@ -94,7 +96,8 @@ namespace PodDownloader
 					try
 					{
 						var path = savePath + fileName;
-						client.DownloadFile(podAddress, path);
+						client.DownloadProgressChanged += eventHandler;
+						client.DownloadFileTaskAsync(podAddress, path).Wait();
 					}
 					catch (WebException)
 					{

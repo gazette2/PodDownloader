@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Android.Net;
 using System.IO;
+using System.Net;
 
 namespace PodDownloader
 {
@@ -57,9 +58,9 @@ namespace PodDownloader
 
 					BatchDownloader.Date = datePicker.DateTime;
 					List<string> failedList = new List<string>();
-					failedList.AddRange(BatchDownloader.DownloadJungsNewsShow(savePath));
-					failedList.AddRange(BatchDownloader.DownloadKimsNewsFactory(savePath));
-					failedList.AddRange(BatchDownloader.DownloadKimsNewsShow(savePath));
+					failedList.AddRange(BatchDownloader.DownloadJungsNewsShow(savePath, DownloadProgressHandler));
+					failedList.AddRange(BatchDownloader.DownloadKimsNewsFactory(savePath, DownloadProgressHandler));
+					failedList.AddRange(BatchDownloader.DownloadKimsNewsShow(savePath, DownloadProgressHandler));
 
 					RunOnUiThread(() =>
 					{
@@ -71,10 +72,16 @@ namespace PodDownloader
 								Log.Info(typeof(MainActivity).ToString(), msg);
 								adapter.Add(msg);
 							});
+						adapter.Add("Download complete");
 						adapter.NotifyDataSetChanged();
 						Toast.MakeText(this, "Download complete", ToastLength.Long).Show();
 					});
 				});
+			}
+
+			void DownloadProgressHandler(object sender, DownloadProgressChangedEventArgs e)
+			{
+				progressBar.SetProgress(e.ProgressPercentage, true);
 			}
 		}
 
