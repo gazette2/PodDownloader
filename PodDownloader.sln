@@ -5,9 +5,11 @@ VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PodDownloader", "PodDownloader\PodDownloader.csproj", "{3EFB4225-E2CA-4821-BE8C-09806745B92B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BatchDownloader", "BatchDownloader\BatchDownloader.csproj", "{E0BF01E6-779B-4027-B810-7B1188251E61}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BatchDownloader", "BatchDownloader\BatchDownloader.csproj", "{E0BF01E6-779B-4027-B810-7B1188251E61}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsoleApp", "TestConsoleApp\TestConsoleApp.csproj", "{8D4E8131-AA28-4A1A-B15C-3730EF1B31B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestConsoleApp", "TestConsoleApp\TestConsoleApp.csproj", "{8D4E8131-AA28-4A1A-B15C-3730EF1B31B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{821F26CB-C9C0-4BC0-9949-C1456725C4A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +31,10 @@ Global
 		{8D4E8131-AA28-4A1A-B15C-3730EF1B31B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D4E8131-AA28-4A1A-B15C-3730EF1B31B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D4E8131-AA28-4A1A-B15C-3730EF1B31B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{821F26CB-C9C0-4BC0-9949-C1456725C4A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{821F26CB-C9C0-4BC0-9949-C1456725C4A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{821F26CB-C9C0-4BC0-9949-C1456725C4A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{821F26CB-C9C0-4BC0-9949-C1456725C4A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

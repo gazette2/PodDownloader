@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Android.Net;
 using System.IO;
 using System.Net;
+using DownloadLibrary;
 
 namespace PodDownloader
 {

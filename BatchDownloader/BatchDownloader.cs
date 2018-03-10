@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 
-namespace PodDownloader
+namespace DownloadLibrary
 {
 	public static class BatchDownloader
 	{
@@ -42,7 +42,7 @@ namespace PodDownloader
 						client.DownloadProgressChanged += eventHandler;
 						client.DownloadFileTaskAsync(podAddress, path).Wait();
 					}
-					catch (WebException)
+					catch (Exception)
 					{
 						failedFileList.Add(podAddress);
 					}
@@ -73,7 +73,7 @@ namespace PodDownloader
 						client.DownloadProgressChanged += eventHandler;
 						client.DownloadFileTaskAsync(podAddress, path).Wait();
 					}
-					catch (WebException)
+					catch (Exception)
 					{
 						failedFileList.Add(podAddress);
 					}
@@ -99,7 +99,7 @@ namespace PodDownloader
 						client.DownloadProgressChanged += eventHandler;
 						client.DownloadFileTaskAsync(podAddress, path).Wait();
 					}
-					catch (WebException)
+					catch (Exception)
 					{
 						failedFileList.Add(podAddress);
 					}

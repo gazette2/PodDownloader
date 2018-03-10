@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<PodAddressList xmlns="http://gazette2.ddns.net/PodDownloadAddr.xsd">
+	<PodAddress Name="Jung">
+		<AddressTemplate>http://cdn.podbbang.com/data1/tbsadm/nf{y}{m}{d}00{i}.mp3</AddressTemplate>
+		<SequenceNumber>
+			<id>1</id>
+			<id>2</id>
+			<id>3</id>
+		</SequenceNumber>
+	</PodAddress>
+</PodAddressList>

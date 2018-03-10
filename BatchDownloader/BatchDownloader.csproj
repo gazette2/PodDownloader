@@ -4,4 +4,19 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="PodAddress.xml" />
+    <None Remove="PodDownloadAddr.xsd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ApplicationDefinition Include="PodDownloadAddr.xsd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="PodAddress.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
