@@ -1,31 +1,109 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.OS;
+using Android.Util;
 using Android.Widget;
 using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Android.Net;
+using System.IO;
+using System.Net;
+using DownloadLibrary;
 
 namespace PodDownloader
 {
 	[Activity(Label = "PodDownloader", MainLauncher = true)]
 	public class MainActivity : Activity
 	{
+		private ArrayAdapter adapter;
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
 			base.OnCreate(savedInstanceState);
 
 			// Set our view from the "main" layout resource
 			SetContentView(Resource.Layout.Main);
+
+			var messageList = FindViewById<ListView>(Resource.Id.msgList);
+			adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1);
+			messageList.Adapter = adapter;
+			var progressBar = FindViewById<ProgressBar>(Resource.Id.downloadProgressBar);
+			progressBar.Max = 100;
+
+			var datePicker = FindViewById<DatePicker>(Resource.Id.downloadDatePicker);
 			var button = FindViewById<Button>(Resource.Id.downloadButton);
 			button.Click += async (object sender, EventArgs e) =>
 			{
-				await Task.Run(() =>
+				var cm = GetSystemService(ConnectivityService) as ConnectivityManager;
+				if (cm?.ActiveNetworkInfo.Type != ConnectivityType.Wifi)
 				{
-					BatchDownloader.DownloadJungsNewsShow();
-					BatchDownloader.DownloadKimsNewsFactory();
-					BatchDownloader.DownloadKimsNewsShow();
-				});
+					var builder = new AlertDialog.Builder(this);
+					builder.SetMessage("Connect without wifi?");
+					builder.SetNegativeButton("Cancel", (obj, x) => { });
+					builder.SetPositiveButton("Ok", async (obj, which) =>
+					{
+						await StartBatchDownload();
+					});
+					builder.Show();
+				}
+				else
+					await StartBatchDownload();
 			};
+
+			Task StartBatchDownload()
+			{
+				return Task.Run(() =>
+				{
+					var savePath = GetSavePath();
+
+					BatchDownloader.Date = datePicker.DateTime;
+					List<string> failedList = new List<string>();
+					failedList.AddRange(BatchDownloader.DownloadJungsNewsShow(savePath, DownloadProgressHandler));
+					failedList.AddRange(BatchDownloader.DownloadKimsNewsFactory(savePath, DownloadProgressHandler));
+					failedList.AddRange(BatchDownloader.DownloadKimsNewsShow(savePath, DownloadProgressHandler));
+
+					RunOnUiThread(() =>
+					{
+						failedList
+							.Select(msg => "failed url: " + msg)
+							.ToList()
+							.ForEach(msg =>
+							{
+								Log.Info(typeof(MainActivity).ToString(), msg);
+								adapter.Add(msg);
+							});
+						adapter.Add("Download complete");
+						adapter.NotifyDataSetChanged();
+						Toast.MakeText(this, "Download complete", ToastLength.Long).Show();
+					});
+				});
+			}
+
+			void DownloadProgressHandler(object sender, DownloadProgressChangedEventArgs e)
+			{
+				progressBar.SetProgress(e.ProgressPercentage, true);
+			}
+		}
+
+		private string GetSavePath(bool useInternal = false)
+		{
+			string internalPath = FilesDir.AbsolutePath + '/';
+			if (useInternal)
+				return internalPath;
+			else
+			{
+				if (Android.OS.Environment.ExternalStorageState == Android.OS.Environment.MediaMounted)
+				{
+					var downloadFolderPath = Android.OS.Environment.GetExternalStoragePublicDirectory(
+						Android.OS.Environment.DirectoryDownloads).AbsolutePath + '/' + "PodDownload";
+					if (!Directory.Exists(downloadFolderPath))
+						Directory.CreateDirectory(downloadFolderPath);
+					return downloadFolderPath + "/";
+				}
+				else
+					return internalPath;
+			}
 		}
 
 		private void SetAlarms()
