@@ -57,11 +57,12 @@ namespace PodDownloader
 				{
 					var savePath = GetSavePath();
 
-					BatchDownloader.Date = datePicker.DateTime;
+					AddressBuilder.Date = datePicker.DateTime;
+					var addrs = AddressBuilder.Load(Assets.Open("PodAddress.xml"));
+					var urls = AddressBuilder.GetEffectiveAddresses(addrs);
+
 					List<string> failedList = new List<string>();
-					failedList.AddRange(BatchDownloader.DownloadJungsNewsShow(savePath, DownloadProgressHandler));
-					failedList.AddRange(BatchDownloader.DownloadKimsNewsFactory(savePath, DownloadProgressHandler));
-					failedList.AddRange(BatchDownloader.DownloadKimsNewsShow(savePath, DownloadProgressHandler));
+					failedList.AddRange(BatchDownloader.DownloadFromUrls(savePath, urls, DownloadProgressHandler));
 
 					RunOnUiThread(() =>
 					{
