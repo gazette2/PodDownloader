@@ -31,6 +31,12 @@ namespace PodDownloader
 			var progressBar = FindViewById<ProgressBar>(Resource.Id.downloadProgressBar);
 			progressBar.Max = 100;
 
+			var selectButton = FindViewById<Button>(Resource.Id.selectButton);
+			selectButton.Click += (object sender, EventArgs e) =>
+			{
+				StartActivity(typeof(OptionSelectActivity));
+			};
+
 			var datePicker = FindViewById<DatePicker>(Resource.Id.downloadDatePicker);
 			var button = FindViewById<Button>(Resource.Id.downloadButton);
 			button.Click += async (object sender, EventArgs e) =>

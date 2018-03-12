@@ -11,11 +11,22 @@
         android:id="@+id/downloadDatePicker"
         android:calendarViewShown="false"
         android:datePickerMode="spinner" />
-    <Button
-        android:text="Batch download"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/downloadButton" />
+        android:orientation="horizontal">
+        <Button
+            android:text="Batch download"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/downloadButton"
+            android:layout_marginRight="0.0dp" />
+        <Button
+            android:text="Select downloads"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/selectButton" />
+    </LinearLayout>
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
