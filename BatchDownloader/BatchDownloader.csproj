@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="PodAddress.xml" />
+    <None Remove="PodAddressSample.xml" />
     <None Remove="PodDownloadAddr.xsd" />
   </ItemGroup>
 
@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="PodAddress.xml">
+    <Content Include="PodAddressSample.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

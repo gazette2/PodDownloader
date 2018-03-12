@@ -13,7 +13,7 @@ namespace UnitTest
 		[TestMethod]
 		public void XmlLoadTest()
 		{
-			var addressList = AddressBuilder.Load("PodAddress.xml");
+			var addressList = AddressBuilder.Load("PodAddressSample.xml");
 			var urls = AddressBuilder.GetEffectiveAddresses(addressList);
 			foreach (var url in urls)
 			{
@@ -24,7 +24,7 @@ namespace UnitTest
 		[TestMethod]
 		public void XmlLoadFromStreamTest()
 		{
-			FileStream stream = new FileStream("PodAddress.xml", FileMode.Open);
+			FileStream stream = new FileStream("PodAddressSample.xml", FileMode.Open);
 			var lists = AddressBuilder.Load(stream);
 			Assert.IsNotNull(lists);
 		}

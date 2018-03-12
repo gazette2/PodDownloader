@@ -48,6 +48,8 @@ public partial class PodAddressListPodAddress {
     
     private string addressTemplateField;
     
+    private string imageUrlField;
+    
     private int[] sequenceNumberField;
     
     private string nameField;
@@ -59,6 +61,16 @@ public partial class PodAddressListPodAddress {
         }
         set {
             this.addressTemplateField = value;
+        }
+    }
+    
+    /// <remarks/>
+    public string ImageUrl {
+        get {
+            return this.imageUrlField;
+        }
+        set {
+            this.imageUrlField = value;
         }
     }
     

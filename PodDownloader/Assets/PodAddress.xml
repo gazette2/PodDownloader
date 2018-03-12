@@ -2,21 +2,32 @@
 <PodAddressList xmlns="http://gazette2.ddns.net/PodDownloadAddr.xsd">
 	<PodAddress Name="김어준의 뉴스공장">
 		<AddressTemplate>http://cdn.podbbang.com/data1/tbsadm/nf{y}{m}{d}00{i}.mp3</AddressTemplate>
+		<ImageUrl>http://img.podbbang.com/img/pb_m/thumb/x150/12548.png?time=20180312</ImageUrl>
 		<SequenceNumber>
 			<id>1</id>
 			<id>2</id>
 		</SequenceNumber>
 	</PodAddress>
-	<PodAddress Name="김용민의 뉴스쇼">
+	<PodAddress Name="SBS 김용민의 정치쇼">
 		<AddressTemplate>http://podcastfile2.sbs.co.kr/powerfm/{Y}/{m}/love-v2000010280-{Y}{m}{d}(10-0{i}).mp3</AddressTemplate>
+		<ImageUrl>http://img.podbbang.com/img/pb_m/thumb/x150/13459.png?time=20180312</ImageUrl>
 		<SequenceNumber>
 			<id>1</id>
 			<id>2</id>
 			<id>4</id>
 		</SequenceNumber>
 	</PodAddress>
-	<PodAddress Name="김현정의 뉴스쇼">
+	<PodAddress Name="CBS 김현정의 뉴스쇼">
 		<AddressTemplate>http://podcast.cbs-vod.gscdn.com/cbsv/cbsaod/newshow/{Y}{m}{d}newsshow{i}.mp3</AddressTemplate>
+		<ImageUrl>http://img.podbbang.com/img/pb_m/thumb/x150/225.png?time=20180312</ImageUrl>
+		<SequenceNumber>
+			<id>1</id>
+			<id>2</id>
+		</SequenceNumber>
+	</PodAddress>
+	<PodAddress Name="김용민의 뉴스브리핑">
+		<AddressTemplate>http://cdn.podbbang.com/data1/funronga/{y}{m}{d}BR{i}.mp3</AddressTemplate>
+		<ImageUrl>http://img.podbbang.com/img/pb_m/thumb/x150/9938.png?time=20180312</ImageUrl>
 		<SequenceNumber>
 			<id>1</id>
 			<id>2</id>

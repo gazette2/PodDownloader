@@ -13,6 +13,7 @@
 					<xs:complexType>
 						<xs:sequence>
 							<xs:element name="AddressTemplate" type="xs:string" />
+							<xs:element name="ImageUrl" type="xs:string" />
 							<xs:element name ="SequenceNumber">
 								<xs:complexType>
 									<xs:sequence>
