@@ -44,11 +44,11 @@ namespace PodDownloader
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f040007
-			public const int ListItemIcon = 2130968583;
-			
 			// aapt resource value: 0x7f040008
-			public const int ListItemTitle = 2130968584;
+			public const int ListItemIcon = 2130968584;
+			
+			// aapt resource value: 0x7f040009
+			public const int ListItemTitle = 2130968585;
 			
 			// aapt resource value: 0x7f040001
 			public const int downloadButton = 2130968577;
@@ -58,6 +58,9 @@ namespace PodDownloader
 			
 			// aapt resource value: 0x7f040003
 			public const int downloadProgressBar = 2130968579;
+			
+			// aapt resource value: 0x7f040007
+			public const int enabledCheckBox = 2130968583;
 			
 			// aapt resource value: 0x7f040004
 			public const int msgList = 2130968580;

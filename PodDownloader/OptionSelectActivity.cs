@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 
 using Android.App;
 using Android.Content;
+using Android.Graphics;
+using Android.Graphics.Drawables;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
@@ -40,10 +43,24 @@ namespace PodDownloader
 			var iconUrl = view.FindViewById<ImageView>(Resource.Id.ListItemIcon);
 			var title = view.FindViewById<TextView>(Resource.Id.ListItemTitle);
 
-			iconUrl.SetImageURI(Android.Net.Uri.Parse(addressList[position].ImageUrl));
+			iconUrl.SetImageBitmap(GetImageBitmapFromUrl(addressList[position].ImageUrl));
 			title.Text = addressList[position].Name;
 
 			return view;
+		}
+
+		private Bitmap GetImageBitmapFromUrl(string url)
+		{
+			Bitmap bitmap = null;
+
+			using (var webClient = new WebClient())
+			{
+				var data = webClient.DownloadData(url);
+				if(data != null && data.Length > 0)
+					bitmap = BitmapFactory.DecodeByteArray(data, 0, data.Length);
+			}
+
+			return bitmap;
 		}
 
 		private void FillList()
@@ -72,6 +89,5 @@ namespace PodDownloader
 				Finish();
 			};
 		}
-
 	}
 }
