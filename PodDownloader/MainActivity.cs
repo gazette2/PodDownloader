@@ -11,6 +11,7 @@ using Android.Net;
 using System.IO;
 using System.Net;
 using DownloadLibrary;
+using Android.Icu.Util;
 
 namespace PodDownloader
 {
@@ -61,14 +62,7 @@ namespace PodDownloader
 			{
 				return Task.Run(() =>
 				{
-					var savePath = GetSavePath();
-
-					AddressBuilder.Date = datePicker.DateTime;
-					var addrs = AddressBuilder.Load(Assets.Open("PodAddress.xml"));
-					var urls = AddressBuilder.GetEffectiveAddresses(addrs);
-
-					List<string> failedList = new List<string>();
-					failedList.AddRange(BatchDownloader.DownloadFromUrls(savePath, urls, DownloadProgressHandler));
+					List<string> failedList = Download(datePicker.DateTime, DownloadProgressHandler);
 
 					RunOnUiThread(() =>
 					{
@@ -93,6 +87,19 @@ namespace PodDownloader
 			}
 		}
 
+		private List<string> Download(DateTime date, DownloadProgressChangedEventHandler handler)
+		{
+			var savePath = GetSavePath();
+
+			AddressBuilder.Date = date;
+			var addrs = AddressBuilder.Load(Assets.Open("PodAddress.xml"));
+			var urls = AddressBuilder.GetEffectiveAddresses(addrs);
+
+			List<string> failedList = new List<string>();
+			failedList.AddRange(BatchDownloader.DownloadFromUrls(savePath, urls, handler));
+			return failedList;
+		}
+
 		private string GetSavePath(bool useInternal = false)
 		{
 			string internalPath = FilesDir.AbsolutePath + '/';
@@ -113,20 +120,62 @@ namespace PodDownloader
 			}
 		}
 
+		NotificationReceiver receiver;
+
 		private void SetAlarms()
 		{
-			/*
-			AlarmManager alarm = (AlarmManager)GetSystemService(Context.AlarmService);
+			void Callback(Activity activity)
+			{
+				Download(DateTime.Now, null);
+			}
 
-			var futureDate = DateTime.Now.Date + new TimeSpan(10, 0, 0);
-			if (DateTime.Now.Hour > 10)
-				futureDate.AddHours(24);
+			receiver = new NotificationReceiver(this, Callback);
+			receiver.SetAlarms();
+		}
+	}
 
-			Intent intent = new Intent(this, typeof(BatchDownloader));
+	[BroadcastReceiver]
+	public class NotificationReceiver : BroadcastReceiver
+	{
+		private Activity activity;
+		private Action<Activity> actionTodo;
 
-			PendingIntent sender = PendingIntent.GetBroadcast(this, 0, intent, PendingIntentFlags.UpdateCurrent);
-			alarm.Set(AlarmType.RtcWakeup, futureDate.Millisecond, sender);
-			*/
+		public NotificationReceiver()
+		{
+
+		}
+
+		public NotificationReceiver(Activity activity, Action<Activity> func)
+		{
+			this.activity = activity;
+			this.actionTodo = func;
+		}
+
+		public override void OnReceive(Context context, Intent intent)
+		{
+			if (context.Equals(activity))
+			{
+				var cm = context.GetSystemService(Context.ConnectivityService) as ConnectivityManager;
+				if (cm?.ActiveNetworkInfo.Type == ConnectivityType.Wifi)
+					actionTodo(activity);
+			}
+			else
+				throw new InvalidOperationException();
+		}
+
+		public void SetAlarms()
+		{
+			AlarmManager alarm = (AlarmManager)activity.GetSystemService(Context.AlarmService);
+
+			Calendar calendar = Calendar.Instance;
+			calendar.TimeInMillis = Java.Lang.JavaSystem.CurrentTimeMillis();
+			calendar.Set(CalendarField.HourOfDay, 15);
+			calendar.Set(CalendarField.Minute, 0);
+			calendar.Set(CalendarField.Second, 0);
+
+			Intent intent = new Intent(activity, typeof(NotificationReceiver));
+			PendingIntent pendingIntent = PendingIntent.GetBroadcast(activity, 0, intent, PendingIntentFlags.UpdateCurrent);
+			alarm.SetRepeating(AlarmType.RtcWakeup, calendar.TimeInMillis, AlarmManager.IntervalDay, pendingIntent);
 		}
 	}
 }
