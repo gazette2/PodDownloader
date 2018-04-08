@@ -129,7 +129,8 @@ namespace PodDownloader
 				Task.Run(() => Download(DateTime.Now, null));
 			}
 
-			NotificationReceiver.SetAlarms(this, Callback);
+			NotificationReceiver.SetAction(Callback);
+			NotificationReceiver.SetAlarms(this);
 		}
 	}
 
@@ -138,9 +139,6 @@ namespace PodDownloader
 	{
 		private static Action actionTodo;
 
-		public NotificationReceiver()
-		{}
-
 		public override void OnReceive(Context context, Intent intent)
 		{
 			var cm = context.GetSystemService(Context.ConnectivityService) as ConnectivityManager;
@@ -148,20 +146,20 @@ namespace PodDownloader
 				actionTodo();
 		}
 
-		public static void SetAlarms(Activity activity, Action action)
-		{
-			actionTodo = action;
+		public static void SetAction(Action action) => actionTodo = action;
 
-			AlarmManager alarm = (AlarmManager)activity.GetSystemService(Context.AlarmService);
+		public static void SetAlarms(Context context)
+		{
+			AlarmManager alarm = (AlarmManager)context.GetSystemService(Context.AlarmService);
 
 			Calendar calendar = Calendar.Instance;
 			calendar.TimeInMillis = Java.Lang.JavaSystem.CurrentTimeMillis();
-			calendar.Set(CalendarField.HourOfDay, 24);
+			calendar.Set(CalendarField.HourOfDay, 15);
 			calendar.Set(CalendarField.Minute, 00);
 			calendar.Set(CalendarField.Second, 0);
 
-			Intent intent = new Intent(activity, typeof(NotificationReceiver));
-			PendingIntent pendingIntent = PendingIntent.GetBroadcast(activity, 0, intent, PendingIntentFlags.UpdateCurrent);
+			Intent intent = new Intent(context, typeof(NotificationReceiver));
+			PendingIntent pendingIntent = PendingIntent.GetBroadcast(context, 0, intent, PendingIntentFlags.UpdateCurrent);
 			alarm.SetRepeating(AlarmType.RtcWakeup, calendar.TimeInMillis, AlarmManager.IntervalDay, pendingIntent);
 		}
 	}
