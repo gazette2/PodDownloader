@@ -58,6 +58,8 @@ namespace PodDownloader
 					await StartBatchDownload();
 			};
 
+			SetAlarms();
+
 			Task StartBatchDownload()
 			{
 				return Task.Run(() =>
@@ -120,57 +122,42 @@ namespace PodDownloader
 			}
 		}
 
-		NotificationReceiver receiver;
-
 		private void SetAlarms()
 		{
-			void Callback(Activity activity)
+			void Callback()
 			{
-				Download(DateTime.Now, null);
+				Task.Run(() => Download(DateTime.Now, null));
 			}
 
-			receiver = new NotificationReceiver(this, Callback);
-			receiver.SetAlarms();
+			NotificationReceiver.SetAlarms(this, Callback);
 		}
 	}
 
 	[BroadcastReceiver]
 	public class NotificationReceiver : BroadcastReceiver
 	{
-		private Activity activity;
-		private Action<Activity> actionTodo;
+		private static Action actionTodo;
 
 		public NotificationReceiver()
-		{
-
-		}
-
-		public NotificationReceiver(Activity activity, Action<Activity> func)
-		{
-			this.activity = activity;
-			this.actionTodo = func;
-		}
+		{}
 
 		public override void OnReceive(Context context, Intent intent)
 		{
-			if (context.Equals(activity))
-			{
-				var cm = context.GetSystemService(Context.ConnectivityService) as ConnectivityManager;
-				if (cm?.ActiveNetworkInfo.Type == ConnectivityType.Wifi)
-					actionTodo(activity);
-			}
-			else
-				throw new InvalidOperationException();
+			var cm = context.GetSystemService(Context.ConnectivityService) as ConnectivityManager;
+			if (cm?.ActiveNetworkInfo.Type == ConnectivityType.Wifi)
+				actionTodo();
 		}
 
-		public void SetAlarms()
+		public static void SetAlarms(Activity activity, Action action)
 		{
+			actionTodo = action;
+
 			AlarmManager alarm = (AlarmManager)activity.GetSystemService(Context.AlarmService);
 
 			Calendar calendar = Calendar.Instance;
 			calendar.TimeInMillis = Java.Lang.JavaSystem.CurrentTimeMillis();
-			calendar.Set(CalendarField.HourOfDay, 15);
-			calendar.Set(CalendarField.Minute, 0);
+			calendar.Set(CalendarField.HourOfDay, 24);
+			calendar.Set(CalendarField.Minute, 00);
 			calendar.Set(CalendarField.Second, 0);
 
 			Intent intent = new Intent(activity, typeof(NotificationReceiver));
