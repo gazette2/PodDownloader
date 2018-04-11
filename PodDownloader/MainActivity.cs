@@ -97,9 +97,31 @@ namespace PodDownloader
 			var addrs = AddressBuilder.Load(Assets.Open("PodAddress.xml"));
 			var urls = AddressBuilder.GetEffectiveAddresses(addrs);
 
+			var workset = BatchDownloader.DownloadFromUrls(savePath, urls, handler);
 			List<string> failedList = new List<string>();
-			failedList.AddRange(BatchDownloader.DownloadFromUrls(savePath, urls, handler));
+			List<string> successList = new List<string>();
+			foreach (var (url, success) in workset)
+			{
+				if (success)
+					successList.Add(url);
+				else
+					failedList.Add(url);
+			}
+
+			ScanMedia(successList);
+
 			return failedList;
+		}
+
+		private void ScanMedia(List<string> workset)
+		{
+			foreach (var item in workset)
+			{
+				var file = new Java.IO.File(item);
+				var uri = Android.Net.Uri.FromFile(file);
+				var scanItent = new Intent(Intent.ActionMediaScannerScanFile, uri);
+				SendBroadcast(scanItent);
+			}
 		}
 
 		private string GetSavePath(bool useInternal = false)

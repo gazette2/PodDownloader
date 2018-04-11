@@ -8,9 +8,9 @@ namespace DownloadLibrary
 {
 	public static class BatchDownloader
 	{
-		public static List<string> DownloadFromUrls(string savePath, List<string> urls, DownloadProgressChangedEventHandler eventHandler)
+		public static List<(string url, bool success)> DownloadFromUrls(string savePath, List<string> urls, DownloadProgressChangedEventHandler eventHandler)
 		{
-			List<string> failedFileList = new List<string>();
+			List<(string, bool)> workList = new List<(string, bool)>();
 			using (WebClient client = new WebClient())
 			{
 				foreach (var url in urls)
@@ -21,14 +21,15 @@ namespace DownloadLibrary
 					{
 						client.DownloadProgressChanged += eventHandler;
 						client.DownloadFileTaskAsync(url, path).Wait();
+						workList.Add((url, true));
 					}
 					catch (Exception)
 					{
-						failedFileList.Add(url);
+						workList.Add((url, false));
 					}
 				}
 			}
-			return failedFileList;
+			return workList;
 		}
 	}
 }
