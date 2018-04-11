@@ -99,29 +99,21 @@ namespace PodDownloader
 
 			var workset = BatchDownloader.DownloadFromUrls(savePath, urls, handler);
 			List<string> failedList = new List<string>();
-			List<string> successList = new List<string>();
 			foreach (var (url, success) in workset)
 			{
 				if (success)
-					successList.Add(url);
+				{
+					var path = savePath + Path.GetFileName(url);
+					var file = new Java.IO.File(path);
+					var uri = Android.Net.Uri.FromFile(file);
+					var scanItent = new Intent(Intent.ActionMediaScannerScanFile, uri);
+					SendBroadcast(scanItent);
+				}
 				else
 					failedList.Add(url);
 			}
 
-			ScanMedia(successList);
-
 			return failedList;
-		}
-
-		private void ScanMedia(List<string> workset)
-		{
-			foreach (var item in workset)
-			{
-				var file = new Java.IO.File(item);
-				var uri = Android.Net.Uri.FromFile(file);
-				var scanItent = new Intent(Intent.ActionMediaScannerScanFile, uri);
-				SendBroadcast(scanItent);
-			}
 		}
 
 		private string GetSavePath(bool useInternal = false)
@@ -134,7 +126,7 @@ namespace PodDownloader
 				if (Android.OS.Environment.ExternalStorageState == Android.OS.Environment.MediaMounted)
 				{
 					var downloadFolderPath = Android.OS.Environment.GetExternalStoragePublicDirectory(
-						Android.OS.Environment.DirectoryDownloads).AbsolutePath + '/' + "PodDownload";
+						Android.OS.Environment.DirectoryDownloads).AbsolutePath + "/PodDownload/" + DateTime.Now.ToString("yyMMdd");
 					if (!Directory.Exists(downloadFolderPath))
 						Directory.CreateDirectory(downloadFolderPath);
 					return downloadFolderPath + "/";
